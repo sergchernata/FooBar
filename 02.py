@@ -1,3 +1,4 @@
+# too memory intensive for el goog
 def answer(x, y):
 	size = x if x > y else y
 	size = size*2
@@ -15,5 +16,8 @@ def answer(x, y):
 			y_cursor = 0
 
 	print(grid[x-1][y-1])
+
+# algo rewrite
+def answer()
 
 answer(5,10)
