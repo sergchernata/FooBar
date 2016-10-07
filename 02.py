@@ -18,6 +18,19 @@ def answer(x, y):
 	print(grid[x-1][y-1])
 
 # algo rewrite
-def answer()
+def answer(x,y):
+	count = 1
+	x_step = 2
+	y_step = x
 
-answer(5,10)
+	for x in range(1,x):
+		count += x_step
+		x_step += 1
+
+	for y in range(1,y):
+		count += y_step
+		y_step += 1
+
+	print(count)
+
+answer(1,1)
