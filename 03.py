@@ -1,12 +1,11 @@
 def answer(start, length):
     count = start
     checksum = -1
-    x_axis = range(length)
-    y_axis = reversed(range(length + 1))
+    x_axis = range(length + 1)
+    y_axis = reversed(range(length))
 
     for y in y_axis:
-        line = y
-
+        line = y + 1
         for x in x_axis:
             if line > 0:
                 if checksum > -1:
@@ -14,8 +13,10 @@ def answer(start, length):
                 else:
                     checksum = start
                 line -= 1
-
-            count += 1
+                count += 1
+            else:
+                count += length - x
+                break
 
     return checksum
 
