@@ -1,21 +1,27 @@
 def answer(total_lambs):
-    max = int(total_lambs / 2)
-    last = 1
     stingy = [1,1,2,3]
     generous = [1,2,4]
 
     i = 4
-    while i*2 < max:
+    while i < total_lambs:
         new = stingy[-1] + stingy[-2]
+
+        if sum(stingy) + new > total_lambs:
+            break
+
         stingy.append(new)
         i = new
 
     i = 5
-    while i*2 < max:
+    while i < total_lambs:
         new = generous[-1] * 2
+
+        if sum(generous) + new > total_lambs:
+            break
+
         generous.append(new)
         i = new
 
     return len(stingy) - len(generous)
 
-answer(10)
+print(answer(1000000))
