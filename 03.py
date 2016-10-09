@@ -1,7 +1,9 @@
+import time
+
 def answer(start, length):
     count = start
     checksum = -1
-    x_axis = iter(range(length + 1))
+    x_axis = range(length + 1)
     y_axis = iter(reversed(range(length)))
 
     for y in y_axis:
@@ -20,4 +22,7 @@ def answer(start, length):
 
     return checksum
 
+start = time.time()
 print(answer(17,4))
+end = time.time()
+print(end - start)
