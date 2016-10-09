@@ -23,25 +23,25 @@ def answer(start, length):
 
 # one loop
 def answer(start, length):
-    checksum = skip = -1
+    chksm = skip = None
     end = start + 4 * (length - 1) + 1
-    line = prev = length
+    line = prev_line = length
 
     for x in range(start,end):
         if line == 0:
-            if skip == -1: skip = length - prev
+            if skip == None: skip = length - prev_line
 
             if skip <= 0:
-                checksum ^= x
-                line = prev = prev - 1
-                skip = -1
+                chksm ^= x
+                line = prev_line = prev_line - 1
+                skip = None
                 line -= 1
             else:
                 skip -= 1
         else:
-            checksum = checksum^x if checksum != -1 else x
+            chksm = chksm^x if chksm != None else x
             line -= 1
 
-    return checksum
+    return chksm
 
 print(answer(17,4))
