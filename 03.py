@@ -24,7 +24,7 @@ def answer(start, length):
 # one loop
 def answer(start, length):
     chksm = skip = None
-    end = start + 4 * (length - 1) + 1
+    end = start + length * (length - 1) + 1
     line = prev_line = length
 
     for x in range(start,end):
