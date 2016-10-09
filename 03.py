@@ -1,3 +1,4 @@
+# two loops
 def answer(start, length):
     count = start
     checksum = -1
@@ -20,13 +21,13 @@ def answer(start, length):
 
     return checksum
 
+# one loop
 def answer(start, length):
     checksum = skip = -1
     end = start + 4 * (length - 1) + 1
     line = prev = length
 
     for x in range(start,end):
-
         if line == 0:
             if skip == -1: skip = length - prev
 
