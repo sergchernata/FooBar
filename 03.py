@@ -30,10 +30,8 @@ def answer(start, length):
     while start <= end:
         if line == 0:
             start += length - prev_line
-
             chksm ^= start
             line = prev_line = prev_line - 1
-
         else:
             chksm ^= start
 
@@ -42,4 +40,4 @@ def answer(start, length):
 
     return chksm
 
-print(answer(17,4))
+print(answer(0,3))
