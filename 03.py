@@ -1,8 +1,8 @@
 def answer(start, length):
     count = start
     checksum = -1
-    x_axis = range(length + 1)
-    y_axis = reversed(range(length))
+    x_axis = iter(range(length + 1))
+    y_axis = iter(reversed(range(length)))
 
     for y in y_axis:
         line = y + 1
