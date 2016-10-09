@@ -23,7 +23,7 @@ def answer(start, length):
 
 # one loop
 def answer(start, length):
-    chksm = None
+    chksm = 0
     end = start + length * (length - 1)
     line = prev_line = length
 
@@ -35,10 +35,11 @@ def answer(start, length):
             line = prev_line = prev_line - 1
 
         else:
-            chksm = chksm^start if chksm != None else start
+            chksm ^= start
 
         start += 1
         line-= 1
+
     return chksm
 
-print(answer(0,3))
+print(answer(17,4))
