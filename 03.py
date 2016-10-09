@@ -23,25 +23,22 @@ def answer(start, length):
 
 # one loop
 def answer(start, length):
-    chksm = skip = None
-    end = start + length * (length - 1) + 1
+    chksm = None
+    end = start + length * (length - 1)
     line = prev_line = length
 
-    for x in range(start,end):
+    while start <= end:
         if line == 0:
-            if skip == None: skip = length - prev_line
+            start += length - prev_line
 
-            if skip <= 0:
-                chksm ^= x
-                line = prev_line = prev_line - 1
-                skip = None
-                line -= 1
-            else:
-                skip -= 1
+            chksm ^= start
+            line = prev_line = prev_line - 1
+
         else:
-            chksm = chksm^x if chksm != None else x
-            line -= 1
+            chksm = chksm^start if chksm != None else start
 
+        start += 1
+        line-= 1
     return chksm
 
-print(answer(17,4))
+print(answer(0,3))
