@@ -1,8 +1,12 @@
 def answer(M, F):
     cycles = 0
-    M = int(M)
-    F = int(F)
+    m = f = 1
+    m_goal = int(M)
+    f_goal = int(F)
+    condition = m == m_goal and f == f_goal
 
-    cycles = str(M if M < F else F)
+    while not condition:
 
-    return str(cycles) or 'impossible'
+        cycles += 1
+
+    return str(cycles) if condition else 'impossible'
