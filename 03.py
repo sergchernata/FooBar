@@ -1,6 +1,6 @@
 from operator import xor
 import itertools as IT
-import functools
+from functools import reduce
 
 # two loops
 def answer(start, length):
@@ -30,13 +30,13 @@ def answer(start, length):
     chksm = 0
     end = start + length * (length - 1)
     line = prev_line = length
-    
+
     while start <= end:
         if line == 0:
             start += length - prev_line
             line = prev_line = prev_line - 1
         else:
-            chksm ^= functools.reduce(xor, list(range(start,start+line)))
+            chksm ^= reduce(xor, list(range(start,start+line)))
             start += line
             line = 0
 
