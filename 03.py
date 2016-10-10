@@ -1,3 +1,7 @@
+from operator import xor
+import itertools as IT
+import functools
+
 # two loops
 def answer(start, length):
     count = start
@@ -36,8 +40,17 @@ def answer(start, length):
             chksm ^= start
 
         start += 1
-        line-= 1
+        line -= 1
 
     return chksm
 
-print(answer(0,3))
+# let's get weird with it
+def answer(start, length):
+    c = IT.count(0)
+    s = start
+    l = length
+    nums = [list(range(s+l*n, s+l*n+l-next(c))) for n in range(l)]
+    nums = [item for sublist in nums for item in sublist]
+    return functools.reduce(xor, nums)
+
+print(answer(17,4))
