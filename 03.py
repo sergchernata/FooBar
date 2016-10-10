@@ -2,8 +2,8 @@ from operator import xor
 import itertools as IT
 from functools import reduce
 import time
+import math
 
-# two loops
 # def answer(start, length):
 # 	count = start
 # 	checksum = -1
@@ -26,6 +26,19 @@ import time
 
 # 	return checksum
 
+# two ways of doing the same thing
+def f(a):
+    #res = [a, 1, a+1, 0]
+    #return res[a%4]
+	if a%4 == 0:
+		return a
+	elif a%4 == 1:
+		return 1
+	elif a%4 == 2:
+		return a+1
+	else:
+		return 0
+
 # one loop
 def answer(start, length):
 	chksm = 0
@@ -33,7 +46,10 @@ def answer(start, length):
 	line = prev_line = length
 	
 	while start <= end:
-		chksm ^= reduce(xor, list(range(start,start+line)))
+		#chksm ^= reduce(lambda x, y: x^y, list(range(start,start+line)))
+		#chksm ^= reduce(xor, list(range(start,start+line)))
+		#for x in range(start,start+line): chksm ^= x
+		chksm ^= f(start+line-1) ^ f(start-1)
 		start += line + length - prev_line
 		line = prev_line = prev_line - 1
 
