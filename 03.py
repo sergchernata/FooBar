@@ -1,8 +1,6 @@
 from operator import xor
 import itertools as IT
 from functools import reduce
-import time
-import math
 
 # def answer(start, length):
 # 	count = start
@@ -64,7 +62,4 @@ def answer(start, length):
 # 	nums = [item for sublist in nums for item in sublist]
 # 	return reduce(xor, nums)
 
-start = time.time()
 print(answer(17,4))
-end = time.time()
-print(end - start)
