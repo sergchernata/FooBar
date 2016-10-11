@@ -1,0 +1,1 @@
+def answer(l):
