@@ -5,9 +5,10 @@ def answer(M, F):
     f_goal = int(F)
     condition = m == m_goal and f == f_goal
 
-    if m_goal+f_goal%2 != 0:
-        while not condition:
+    while not condition:
 
-            cycles += 1
+        cycles += 1
 
     return str(cycles) if condition else 'impossible'
+
+print(answer('4','7'))
