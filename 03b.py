@@ -1,17 +1,14 @@
 def answer(M, F):
     cycles = 0
-    m = int(M)
-    f = int(F)
+    n = sorted([int(M),int(F)])
+    m = n[1]
+    f = n[0]
 
     while m >= 1 and f >= 1:
 
-        if m > f and int(m % f) > 0:
+        if int(m % f) > 0:
             c = int(m / f)
             m -= f * c
-            cycles += c
-        elif m < f and int(f % m) > 0:
-            c = int(f / m)
-            f -= m * c
             cycles += c
 
         if m > f:
