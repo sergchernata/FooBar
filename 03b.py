@@ -3,12 +3,16 @@ def answer(M, F):
     m = f = 1
     m_goal = int(M)
     f_goal = int(F)
-    condition = m == m_goal and f == f_goal
 
-    while not condition:
-
+    while m <= m_goal and f <= f_goal:
+        m = f + m
         cycles += 1
 
-    return str(cycles) if condition else 'impossible'
 
-print(answer('4','7'))
+    if m == m_goal and f == f_goal:
+        return str(cycles)
+    else:
+        return 'impossible'
+
+print(10**50)
+print(answer('2','1'))
