@@ -3,18 +3,26 @@ def answer(M, F):
     m = int(M)
     f = int(F)
 
-    while (m > 1 or f > 1) and (m > 0 and f > 0):
+    while m >= 1 and f >= 1:
+
+        if m > f and int(m % f) > 0:
+            c = int(m / f)
+            m -= f * c
+            cycles += c
+        elif m < f and int(f % m) > 0:
+            c = int(f / m)
+            f -= m * c
+            cycles += c
+
         if m > f:
-            m = m - f
+            m -= f
+        elif m < f:
+            f -= m
         elif m == f:
             break
-        else:
-            f = f - m
+
         cycles += 1
 
-    if m == f == 1:
-        return str(cycles)
-    else:
-        return 'impossible'
+    return str(cycles) if m == f == 1 else 'impossible'
 
-print(answer('4','7'))
+print(answer('3','10'))
