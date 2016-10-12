@@ -3,17 +3,16 @@ import time
 
 def answer(l):
 	triples = 0
-	nums = list(l)
-	nums.reverse()
+	l.reverse()
 	processed = []
 
-	for x in nums:
-		subset = [n for n in nums if x%n==0]
+	for num in l:
+		subset = [n for n in l if num%n==0]
 		subset.pop(0)
 
-		if x not in processed:
-			divisors = combinations(subset, 2)
-			triples += sum(1 for d in divisors if d[0]%d[1]==0)
+		if num not in processed:
+			combo = combinations(subset, 2)
+			triples += sum(1 for d in combo if d[0]%d[1]==0)
 	
 	return triples
 
