@@ -30,10 +30,12 @@ def answer(l):
 
 	return triples
 
+num_list = list(range(1,9999))#[1, 2, 3, 4, 5, 6, 12]
+#print(num_list)
 start = time.time()
-print(answer([1, 2, 3, 4, 5, 6, 12]))
+print(answer(num_list))
 end = time.time()
-print((end - start) * 10000)
+print((end - start))
 
 # 6,6,3
 # 6,6,2
