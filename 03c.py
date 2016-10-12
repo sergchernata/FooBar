@@ -18,7 +18,7 @@ def answer(l):
 	return triples
 
 #num_list = list(range(1,9999))
-num_list = [1, 2, 3, 4, 5, 6]
+num_list = [1, 2, 2, 4]
 
 start = time.time()
 print(answer(num_list))
