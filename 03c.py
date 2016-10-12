@@ -9,10 +9,8 @@ def answer(l):
 	for num in l:
 		subset = [n for n in l[index:] if num%n is 0]
 		subset.pop(0)
-
-		if num not in processed:
-			combo = combinations(subset, 2)
-			triples += sum(1 for d in combo if d[0]%d[1] is 0)
+		combo = combinations(subset, 2)
+		triples += sum(1 for d in combo if d[0]%d[1] is 0)
 
 		index += 1
 
