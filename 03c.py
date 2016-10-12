@@ -1,36 +1,34 @@
 def answer(l):
     triples = 0
-    nums = list(set(l))
+    nums = list(l)
+    nums.reverse()
+    processed = []
 
-    if len(nums) == 1:
-        return 1
-    elif len(nums) == 2:
-        return 0
-    else:
-        nums.reverse()
-        for x in nums:
-            cursor = 1
-            divisors = []
-            if not x % 2:
-                subset = [n for n in nums if x%n==0 and not x == n]
+    for x in nums:
+        cursor = 1
+        divisors = []
+        subset = [n for n in nums if x%n==0]
+        subset.pop(0)
 
-                while len(subset) > 1:
-                    divisor = str(x)+','+str(subset[0])+','+str(subset[cursor])
-                    divides = subset[0] % subset[cursor] == 0
-                    if divides and divisor not in divisors:
-                        divisors.append(divisor)
+        if x not in processed:
+            while len(subset) > 1:
+                divisor = str(subset[0])+','+str(subset[cursor])
+                divides = subset[0] % subset[cursor] == 0
+                if divides and divisor not in divisors:
+                    divisors.append(divisor)
 
-                    if cursor < len(subset) - 1:
-                        cursor += 1
-                    else:
-                        cursor = 1
-                        subset.pop(0)
+                if cursor < len(subset) - 1:
+                    cursor += 1
+                else:
+                    cursor = 1
+                    subset.pop(0)
 
-                triples += len(divisors)
-            print(divisors)
-        return triples
+            triples += len(divisors)
+            processed.append(x)
 
-print(answer([2, 3, 4, 5, 6, 12]))
+    return triples
+
+print(answer([1, 2, 3, 4, 5, 6, 12]))
 
 
 # 12,6,3
