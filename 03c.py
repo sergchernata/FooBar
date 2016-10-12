@@ -7,12 +7,17 @@ def answer(l):
     else:
         nums.reverse()
         for x in nums:
-            high = x / 2
-            even = x % 2 == 0
+            divisors = []
 
-            if even:
-                triples += 1
+            if not x % 2:
+                high = x / 2
+                subset = nums[nums.index(high):]
+                while len(subset) > 1:
+
+                print(subset)
+
+                triples += len(divisors) - 1
 
     return triples
 
-print(answer([1, 2, 3, 4, 5, 6]))
+answer([1, 2, 3, 4, 5, 6, 12])
