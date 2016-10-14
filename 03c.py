@@ -15,17 +15,13 @@ def factors(n):
 	step = 2 if n%2 else 1
 	return set(reduce(list.__add__, ([i, n//i] for i in range(1, int(sqrt(n))+1, step) if n % i == 0)))
 
-def parse(subset, all_factors):
-	result = []
-	for a in all_factors:
-		result += list(repeat(a, subset.count(a)))
-	return result
-
 #@profile
 def answer(l):
 	triples = 0
 	l.reverse()
 	count = Counter(l)
+	next = 0
+	next_count = 0
 
 	for num in l:
 		all_factors = factors(num)
