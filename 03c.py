@@ -1,4 +1,4 @@
-from itertools import combinations, repeat
+from itertools import repeat, count, islice
 from collections import Counter
 from functools import reduce
 from math import sqrt
@@ -16,20 +16,33 @@ def factors(n):
 	return set(reduce(list.__add__, ([i, n//i] for i in range(1, int(sqrt(n))+1, step) if n % i == 0)))
 
 #@profile
-def answer(l):
-	triples = 0
-	l.reverse()
-	count = Counter(l)
-	next = 0
-	next_count = 0
+def combinations(subset):
+	for a in subset:
+		subset.pop(0)
+		for b in subset:
+			if not a%b: yield 1
 
-	for num in l:
-		all_factors = factors(num)
-		subset = [a for a in all_factors for _ in range(count[a])]
+#@profile
+def is_prime(n):
+	if n < 2: return False
+	for number in islice(count(2), int(sqrt(n)-1)):
+		if not n%number:
+			return False
+	return True
+
+#@profile
+def answer(numbers):
+	triples = 0
+	counts = Counter(numbers)
+	numbers = [n for n in numbers if not (counts[n] is 1 and is_prime(n))]
+	numbers = numbers[::-1]
+
+	for n in numbers:
+		all_factors = factors(n)
+		subset = [a for a in all_factors for _ in range(counts[a])]
 		subset = sorted(subset, reverse = True)
 		subset.pop(0)
-		combos = combinations(subset, 2)
-		triples += sum(1 for d in combos if d[0]%d[1] is 0)
+		triples += sum(combinations(subset))
 
 	return triples
 
