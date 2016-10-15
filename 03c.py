@@ -11,31 +11,23 @@ def factors(n):
 
 #@profile
 def combinations(subset):
+	index = 1
 	for a in subset:
-		subset.pop(0)
-		for b in subset:
-			if not a%b: yield 1
-
-#@profile
-def is_prime(n):
-	if n < 2: return False
-	for number in islice(count(2), int(sqrt(n)-1)):
-		if not n%number:
-			return False
-	return True
+		for b in subset[index:]:
+			if not a%b:
+				yield 1
+		index += 1
 
 #@profile
 def answer(numbers):
 	triples = 0
 	counts = Counter(numbers)
+	numbers = numbers[::-1]
 
 	if len(counts) is 1:
 		for c in counts:
 			v = counts[c]
 			return factorial(v) // (factorial(3) * factorial(v-3))
-
-	numbers = [n for n in numbers if not (counts[n] is 1 and is_prime(n))]
-	numbers = numbers[::-1]
 
 	for n in numbers:
 		all_factors = factors(n)
@@ -43,15 +35,16 @@ def answer(numbers):
 		subset = sorted(subset, reverse = True)
 		subset.pop(0)
 		triples += sum(combinations(subset))
+		counts[n] -= 1
 
 	return triples
 
-#num_list = list(range(1,9999))
-num_list = []
-for _ in range(3):
-	num_list.append(1)
-num_list.append(3)
-#num_list = [1,2,3,4,5,6,6]
+num_list = list(range(1,9999))
+# num_list = []
+# for _ in range(3):
+# 	num_list.append(1)
+# num_list.append(3)
+#num_list = [1,2,3,4,5,6]
 
 start = time.time()
 print(answer(num_list))
@@ -59,9 +52,13 @@ end = time.time()
 print((end - start))
 
 
-# 1 1 1 3
-# -------
-# 1 1 1
-#   1 1 3
-# 1 1   3
-# 1   1 3
+# 12 6 3
+# 12 6 2
+# 12 6 1
+# 12 4 2
+# 12 4 1
+# 12 3 1
+# 12 2 1
+# 6  3 1
+# 6  2 1
+# 4  2 1
