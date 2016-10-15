@@ -11,12 +11,33 @@ def factors(n):
 
 #@profile
 def combinations(subset):
+	uniques = set(subset)
+	if len(uniques) is 1 or are_divisors(uniques):
+		return yeah_science(len(subset))
+	else:
+		count = 0
+		index = 1
+		for a in subset:
+			for b in subset[index:]:
+				if not a%b:
+					count += 1
+			index += 1
+		return count
+
+def are_divisors(nums):
+	nums = [n for n in nums]
+	nums = nums[::-1]
 	index = 1
-	for a in subset:
-		for b in subset[index:]:
-			if not a%b:
-				yield 1
+	for a in nums:
+		for b in nums[index:]:
+			if a%b:
+				return False
 		index += 1
+	return True
+
+#science, bitch!
+def yeah_science(v):
+	return factorial(v) // (factorial(3) * factorial(v-3))
 
 #@profile
 def answer(numbers):
@@ -24,26 +45,36 @@ def answer(numbers):
 	counts = Counter(numbers)
 	numbers = numbers[::-1]
 
-	if len(counts) is 1:
-		for c in counts:
-			v = counts[c]
-			return factorial(v) // (factorial(3) * factorial(v-3))
+	# if we have only one unique number
+	# or if all numbers are actual divisors already
+	# then add their counts and use the formula
+	if len(counts) is 1 or are_divisors(counts):
+		v = sum(counts.values())
+		return yeah_science(v)
 
 	for n in numbers:
+		print(n)
 		all_factors = factors(n)
 		subset = [a for a in all_factors for _ in range(counts[a])]
 		subset = sorted(subset, reverse = True)
 		subset.pop(0)
-		triples += sum(combinations(subset))
+		triples += combinations(subset)
+
 		counts[n] -= 1
+		if counts[n] is 0:
+			del counts[n]
+			if are_divisors(counts):
+				v = sum(counts.values())
+				return triples + yeah_science(v)
 
 	return triples
 
-num_list = list(range(1,9999))
-# num_list = []
-# for _ in range(3):
-# 	num_list.append(1)
-# num_list.append(3)
+#num_list = list(range(1,9999))
+num_list = []
+for _ in range(1000):
+	num_list.append(1)
+num_list.append(3)
+#num_list.append(7)
 #num_list = [1,2,3,4,5,6]
 
 start = time.time()
