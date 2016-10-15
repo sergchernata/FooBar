@@ -1,14 +1,8 @@
 from itertools import repeat, count, islice
 from collections import Counter
 from functools import reduce
-from math import sqrt
+from math import sqrt, factorial
 import time
-
-# sexy but slow as fuck
-def answer(l):
-	l.reverse()
-	combo = combinations(l, 3)
-	return sum(1 for d in combo if d[0]%d[1] is 0 and d[1]%d[2] is 0)
 
 #@profile
 def factors(n):
@@ -34,6 +28,12 @@ def is_prime(n):
 def answer(numbers):
 	triples = 0
 	counts = Counter(numbers)
+
+	if len(counts) is 1:
+		for c in counts:
+			v = counts[c]
+			return factorial(v) // (factorial(3) * factorial(v-3))
+
 	numbers = [n for n in numbers if not (counts[n] is 1 and is_prime(n))]
 	numbers = numbers[::-1]
 
@@ -46,10 +46,22 @@ def answer(numbers):
 
 	return triples
 
-num_list = list(range(1,9999))
+#num_list = list(range(1,9999))
+num_list = []
+for _ in range(3):
+	num_list.append(1)
+num_list.append(3)
 #num_list = [1,2,3,4,5,6,6]
 
 start = time.time()
 print(answer(num_list))
 end = time.time()
 print((end - start))
+
+
+# 1 1 1 3
+# -------
+# 1 1 1
+#   1 1 3
+# 1 1   3
+# 1   1 3
