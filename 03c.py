@@ -11,18 +11,16 @@ def factors(n):
 
 #@profile
 def combinations(subset):
-	uniques = set(subset)
-	if len(uniques) is 1 or are_divisors(uniques):
-		return yeah_science(len(subset))
-	else:
-		count = 0
-		index = 1
-		for a in subset:
-			for b in subset[index:]:
-				if not a%b:
-					count += 1
-			index += 1
-		return count
+	subset.pop(0)
+	count = 0
+	index = 1
+	for a in subset:
+		for b in subset[index:]:
+			if not a%b:
+				count += 1
+		index += 1
+
+	return count
 
 def are_divisors(nums):
 	nums = [n for n in nums]
@@ -53,43 +51,54 @@ def answer(numbers):
 		return yeah_science(v)
 
 	for n in numbers:
-		print(n)
 		all_factors = factors(n)
 		subset = [a for a in all_factors for _ in range(counts[a])]
 		subset = sorted(subset, reverse = True)
-		subset.pop(0)
-		triples += combinations(subset)
 
-		counts[n] -= 1
+		uniques = set(subset)
+		v = len(subset)
+		if v > 2 and (len(uniques) is 1 or are_divisors(uniques)):
+			triples += yeah_science(v)
+			numbers = [item for item in numbers if item != n]
+			counts[n] = 0
+
+		else:
+			triples += combinations(subset)
+			counts[n] -= 1
+
 		if counts[n] is 0:
 			del counts[n]
-			if are_divisors(counts):
-				v = sum(counts.values())
+			v = sum(counts.values())
+			if v > 2 and are_divisors(counts):
 				return triples + yeah_science(v)
 
 	return triples
 
 #num_list = list(range(1,9999))
-num_list = []
-for _ in range(1000):
-	num_list.append(1)
-num_list.append(3)
-#num_list.append(7)
-#num_list = [1,2,3,4,5,6]
+# num_list = []
+# for _ in range(1000):
+# 	num_list.append(1)
+# num_list.append(3)
+# num_list.append(7)
+#num_list = [1,1,1,1,1,1,1,3,3,7,7]
+
+print(answer([1,1,1]) is 1)
+print(answer([1,2,3,4,5,6]) is 3)
+print(answer([1,2,3,4,5,6,6]) is 8)
+print(answer([1,2,3,4,5,6,12]) is 10)
+
+# testing the math
+s = answer([1,1,1,1,1,1,1,3,3,7,7])
+a = answer([1,1,1,1,1,1,1,3,3])
+b = answer([1,1,1,1,1,1,1,7,7])
+print(s, a, b, ' - ', s is a + b)
+
+s = answer([1,1,1,1,1,1,1,3,7])
+a = answer([1,1,1,1,1,1,1,3])
+b = answer([1,1,1,1,1,1,1,7])
+print(s, a, b, ' - ', s is a + b)
 
 start = time.time()
-print(answer(num_list))
+#print(answer(num_list))
 end = time.time()
 print((end - start))
-
-
-# 12 6 3
-# 12 6 2
-# 12 6 1
-# 12 4 2
-# 12 4 1
-# 12 3 1
-# 12 2 1
-# 6  3 1
-# 6  2 1
-# 4  2 1
