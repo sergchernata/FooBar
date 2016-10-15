@@ -17,7 +17,6 @@ def combinations(subset):
 			if not a%b:
 				count += 1
 		index += 1
-
 	return count
 
 def are_divisors(nums):
@@ -55,6 +54,7 @@ def answer(numbers):
 		if len(subset) > 2:
 			uniques = set(subset)
 			v = len(subset)
+
 			if v > 2 and (len(uniques) == 1 or are_divisors(uniques)):
 				triples += yeah_science(v)
 				counts[n] = 0
@@ -85,7 +85,7 @@ num_list = [1,1,2,2,3,3,4,4,5,5,6,6]
 # num_list.append(7)
 
 start = time.time()
-#print(answer(num_list))
+print(answer(num_list))
 end = time.time()
 print((end - start))
 
@@ -108,11 +108,15 @@ a = answer([1,1,1,1,1,1,1,3,3,3,3,3,3,12])
 b = answer([1,1,1,1,1,1,1,3,3,3,3,3,3,30,90])
 print(s, a, b, ' - ', s == a + b)
 
+# the one i can't quite wrap my mind around
+# doesn't add up as it should
 s = answer([1,1,2,2,3,3,4,4,5,5,6,6])
 a = answer([1,1,2,2,3,3,6,6])
-b = answer([1,1,2,2,4,4])
-c = answer([1,1,5,5])
-print(s, a, b, c, ' - ', s == a + b + c)
+b = answer([1,1,5,5])
+c = answer([1,1,2,2,4,4])
+d = answer([1,1,3,3])
+e = answer([1,1,2,2])
+print(s, a, b, c, d, e, ' - ', a + b + c + d + e)
 
 s = answer([1,2,3,4,5,6])
 a = answer([1,2,3,6])
