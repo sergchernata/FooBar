@@ -1,51 +1,31 @@
-import time
-
 def answer(maze):
-	luke = LukeMazeWalker()
-	luke.parse_grid(maze)
-	luke.solve()
-	#luke.cut_wall()
-	luke.print_grid()
+	steps = 1
+	x = y = 0
+	w = h = len(maze) - 1
+	maze[y][x] = 8
 
-	return sum(x.count(8) for x in maze)
+	while not x == y == w:
+		if x < w and not maze[y][x+1] == 1:#right
+			#print('right')
+			x += 1
+		elif y < h and not maze[y+1][x] == 1:#down
+			#print('down')
+			y += 1
+		elif x > 0 and not maze[y][x-1] == 1:#left
+			#print('left')
+			x -= 1
+		elif y > 0 and not maze[y-1][x] == 1:#up
+			#print('up')
+			y -= 1
+		else:
+			break
 
-class Cell(object):
-	def __init__(self, x, y):
-		self.came_from = False
-		self.x = x
-		self.y = y
-		self.g = 0
-		self.h = 0
-		self.f = 0
+		maze[y][x] = 8
+		steps += 1
 
-class LukeMazeWalker():
-	def __init__(self):
-		self.opened = [(0,0)]
-		self.closed = []
-		self.cells = []
-		self.walls = []
-		self.grid = []
-		self.height = False
-		self.width = False
+	for line in maze: print(line)
 
-	def parse_grid(self, grid):
-		self.height = self.width = len(grid)
-		self.grid = grid
-		for x in range(self.width):
-			for y in range(self.height):
-				if grid[x][y] == 1:
-					self.walls.append( (x,y) )
-				else:
-					self.cells.append( Cell(x,y) )
-
-	def print_grid(self):
-		for x in self.grid:
-			print(x)
-
-	def solve(self):
-		while len(self.opened) > 0:
-
-
+	return steps
 
 test1 = [
 [0, 0, 0, 0],
@@ -60,35 +40,5 @@ test2 = [
 [0, 1, 1, 1, 1, 1],
 [0, 1, 1, 1, 1, 1],
 [0, 0, 0, 0, 0, 0]]
-
-test3 = [
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-test4 = [
-[0, 0, 0, 0, 0, 1],
-[1, 1, 0, 0, 0, 1],
-[0, 0, 0, 1, 0, 0],
-[0, 1, 1, 0, 0, 1],
-[0, 1, 0, 0, 1, 0],
-[0, 1, 0, 0, 0, 2]]
 
 print('steps: ', answer(test1))
