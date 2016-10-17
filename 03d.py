@@ -1,5 +1,3 @@
-import time
-
 def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
@@ -105,10 +103,27 @@ class LukeMazeWalker():
 		self.total_path.append((0,0))
 
 	def cut_wall(self):
-		for x in self.total_path:
-			pass
+		jump = 0
+		start = 0
+		end = 0
+		
+		for a in self.total_path:
+			for b in self.total_path:
+				x_wall = a[0]+2 == b[0] and a[1] == b[1]
+				y_wall = a[0] == b[0] and a[1]+2 == b[1]
+				if x_wall or y_wall:
+					index_a = self.total_path.index(a)
+					index_b = self.total_path.index(b)
+					dist = abs(index_a - index_b)
+					if dist > jump:
+						jump = dist
+						start = index_a
+						end = index_b
+						shortcut = (a[0]+1, a[1]) if x_wall else (a[0], a[1]+1)
 
-
+		del self.total_path[end+1:start]
+		self.total_path.append(shortcut)
+		self.total_path.sort()
 
 
 test1 = [
