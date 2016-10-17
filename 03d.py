@@ -7,8 +7,6 @@ def answer(maze):
 	#luke.cut_wall()
 	#luke.print_grid()
 
-	return sum(x.count(8) for x in maze)
-
 class Cell(object):
 	def __init__(self, x, y, is_wall = False):
 		self.came_from = False
