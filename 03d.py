@@ -4,7 +4,7 @@ def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
 	luke.solve()
-	#luke.cut_wall()
+	print(len(luke.total_path))
 	#luke.print_grid()
 
 class Cell(object):
@@ -19,7 +19,8 @@ class Cell(object):
 
 class LukeMazeWalker():
 	def __init__(self):
-		self.opened = [Cell(0,0)]
+		self.total_path = []
+		self.opened = []
 		self.closed = []
 		self.cells = []
 		self.walls = []
@@ -29,9 +30,9 @@ class LukeMazeWalker():
 
 	def parse_grid(self, grid):
 		self.height = self.width = len(grid) - 1
-
 		self.grid = grid
 		self.cells = grid[:]
+
 		for x in range(self.width+1):
 			for y in range(self.height+1):
 				if grid[x][y] == 1:
@@ -42,15 +43,19 @@ class LukeMazeWalker():
 				self.cells[x][y] = Cell(x,y,is_wall)
 
 	def solve(self):
+		self.opened.append(self.cells[0][0])
+
 		while len(self.opened):
 			current = self.opened[-1]
 			if current.x == self.width and current.y == self.height:
-				return self.reconstruct()
+				self.reconstruct()
+				self.cut_wall()
 
 			self.closed.append(current)
 			del self.opened[-1]
 			neighbors = self.get_neighbors(current)
 			for n in neighbors:
+				
 				if n in self.closed:
 					continue
 
@@ -72,14 +77,14 @@ class LukeMazeWalker():
 		x = current.x
 		y = current.y
 
-		if x < self.width and (x+1, y) not in self.walls:
+		if y < self.width and (x, y+1) not in self.walls:
+			neighbors.append( self.cells[x][y+1] )
+		if y > 0 and (x, y-1) not in self.walls:
+			neighbors.append( self.cells[x][y-1] )
+		if x < self.height and (x+1, y) not in self.walls:
 			neighbors.append( self.cells[x+1][y] )
 		if x > 0 and (x-1, y) not in self.walls:
 			neighbors.append( self.cells[x-1][y] )
-		if y < self.height and (x, y+1) not in self.walls:
-			neighbors.append( self.cells[x][+1] )
-		if y > 0 and (x, y-1) not in self.walls:
-			neighbors.append( self.cells[x][-1] )
 
 		return neighbors
 
@@ -92,61 +97,62 @@ class LukeMazeWalker():
 
 	def reconstruct(self):
 		cell = self.cells[self.width][self.height]
-		total_path = [(self.width, self.height)]
-		while not (cell.came_from.x == 0 and cell.came_from.x == 0):
+		self.total_path = [(cell.x, cell.y)]
+		while not (cell.came_from.x == 0 and cell.came_from.y == 0):
 			cell = cell.came_from
-			total_path.append((cell.x, cell.y))
+			self.total_path.append((cell.x, cell.y))
 
-		total_path.append((0, 0))
+		self.total_path.append((0,0))
 
-		for x in total_path:
-			print(x)
+	def cut_wall(self):
+		for x in self.total_path:
+			pass
 
 
 
 
 test1 = [
-[0, 0, 0, 0],
-[1, 1, 1, 0],
-[1, 1, 1, 0],
-[1, 1, 1, 0]]
+[0,0,0,0],
+[1,1,1,0],
+[1,1,1,0],
+[1,1,1,0]]
 
 test2 = [
-[0, 0, 0, 0, 0, 0],
-[1, 1, 1, 1, 1, 0],
-[0, 0, 0, 0, 0, 0],
-[0, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1],
-[0, 0, 0, 0, 0, 0]]
+[0,0,0,0,0,0],
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,1,1,1,1,1],
+[0,1,1,1,1,1],
+[0,0,0,0,0,0]]
 
 test3 = [
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 test4 = [
-[0, 0, 0, 0, 0, 1],
-[1, 1, 0, 0, 0, 1],
-[0, 0, 0, 1, 0, 0],
-[0, 1, 1, 0, 0, 1],
-[0, 1, 0, 0, 1, 0],
-[0, 1, 0, 0, 0, 2]]
+[0,0,0,0,0,1],
+[1,1,0,0,0,1],
+[0,0,0,1,0,0],
+[0,1,1,0,0,1],
+[0,1,0,0,1,0],
+[0,1,0,0,0,2]]
 
-print('steps: ', answer(test1))
+answer(test2)
