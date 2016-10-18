@@ -28,6 +28,7 @@ class LukeMazeWalker():
 		self.height = 0
 		self.width = 0
 		self.wall_removed = False
+		self.shortcut = 8
 
 	def parse_grid(self, grid):
 		self.height = len(grid[0]) - 1
@@ -114,7 +115,7 @@ class LukeMazeWalker():
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
 	def cut_wall(self,x,y):
-		self.grid[x][y] = 0
+		self.grid[x][y] = self.shortcut
 		if (x, y) in self.walls:
 			self.walls.remove( (x, y) )
 		self.wall_removed = True
@@ -170,7 +171,9 @@ class LukeMazeWalker():
 						start = index_a
 						end = index_b
 						shortcut = (a[0]+1, a[1]) if x_wall else (a[0], a[1]+1)
+
 		if jump:
+			self.grid[shortcut[0]][shortcut[1]] = self.shortcut
 			del self.total_path[end+1:start]
 			self.total_path.append(shortcut)
 
@@ -235,6 +238,7 @@ test5 = [
 [0,0,0,0,1,0]]
 
 #odd shape maze
+#solves to 8
 test6 = [
 [0,0,0],
 [1,1,1],
@@ -243,4 +247,12 @@ test6 = [
 [0,0,0],
 [1,1,0]]
 
-print(answer(test3))
+test7 = [
+[0,0,0,0,0,0],
+[1,1,0,1,1,1],
+[0,0,0,1,1,0],
+[0,1,1,1,1,0],
+[0,0,0,1,1,0],
+[1,1,0,0,0,0]]
+
+print(answer(test7))
