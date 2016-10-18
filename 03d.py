@@ -172,13 +172,14 @@ class LukeMazeWalker():
 
 		self.total_path.sort()
 
-
+#evaluates to 7
 test1 = [
 [0,1,1,1],
 [0,0,0,1],
 [1,1,0,0],
 [1,1,1,0]]
 
+# evaluates to 11
 test2 = [
 [0,0,0,0,0,0],
 [1,1,1,1,1,0],
@@ -187,6 +188,8 @@ test2 = [
 [0,1,1,1,1,1],
 [0,0,0,0,0,0]]
 
+# not an actual maze
+# just visualizing the biggest one possible
 test3 = [
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
@@ -217,14 +220,17 @@ test4 = [
 [0,1,1,1,1,0],
 [1,1,0,0,0,0]]
 
+# dead end with multiple possible pathways
+# conditional wall breaking
 test5 = [
 [0,0,0,0,0,1],
 [1,1,0,1,1,1],
-[1,1,0,1,0,0],
+[0,1,0,1,0,0],
 [1,1,1,1,1,0],
 [1,1,0,1,1,0],
 [1,1,1,0,0,0]]
 
+#odd shape maze
 test6 = [
 [0,0,0],
 [1,1,1],
