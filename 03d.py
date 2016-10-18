@@ -160,8 +160,8 @@ class LukeMazeWalker():
 
 		for a in self.total_path:
 			for b in self.total_path:
-				x_wall = a[0]+2 == b[0] and a[1] == b[1]
-				y_wall = a[0] == b[0] and a[1]+2 == b[1]
+				x_wall = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
+				y_wall = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
 				if x_wall or y_wall:
 					index_a = self.total_path.index(a)
 					index_b = self.total_path.index(b)
@@ -171,7 +171,7 @@ class LukeMazeWalker():
 						start = index_a
 						end = index_b
 						shortcut = (a[0]+1, a[1]) if x_wall else (a[0], a[1]+1)
-
+		print(jump)
 		if jump:
 			self.grid[shortcut[0]][shortcut[1]] = self.shortcut
 			del self.total_path[end+1:start]
@@ -255,4 +255,4 @@ test7 = [
 [0,0,1,1,1,0],
 [1,0,0,0,0,0]]
 
-print(answer(test7))
+print(answer(test1))
