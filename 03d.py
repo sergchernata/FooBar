@@ -49,7 +49,6 @@ class LukeMazeWalker():
 	def walk(self):
 		self.opened = []
 		self.closed = []
-		self.grid = self.grid_original
 		self.opened.append(self.cells[0][0])
 
 		while len(self.opened):
@@ -115,6 +114,7 @@ class LukeMazeWalker():
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
 	def cut_wall(self,x,y):
+		self.grid = [list(x) for x in self.grid_original]
 		self.grid[x][y] = self.shortcut
 		if (x, y) in self.walls:
 			self.walls.remove( (x, y) )
@@ -249,10 +249,10 @@ test6 = [
 
 test7 = [
 [0,0,0,0,0,0],
-[1,1,0,1,1,1],
-[0,0,0,1,1,0],
+[1,1,1,1,1,1],
+[0,1,0,1,1,0],
 [0,1,1,1,1,0],
-[0,0,0,1,1,0],
-[1,1,0,0,0,0]]
+[0,0,1,1,1,0],
+[1,0,0,0,0,0]]
 
 print(answer(test7))
