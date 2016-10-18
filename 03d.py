@@ -78,6 +78,9 @@ class LukeMazeWalker():
 					n.f = n.h + n.g
 					self.opened.append( n )
 
+		self.evaluate_dead_end(current)
+
+	def evaluate_dead_end(self, current):
 		if not len(self.total_path):
 			if self.wall_removed:
 				if len(self.test_walls) > 0:
@@ -230,4 +233,4 @@ test6 = [
 [0,0,0],
 [1,1,0]]
 
-print(answer(test6))
+print(answer(test5))
