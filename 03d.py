@@ -1,8 +1,8 @@
 def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
-	luke.solve()
-
+	luke.walk()
+	luke.print_grid()
 	return len(luke.total_path)
 
 class Cell(object):
@@ -45,7 +45,7 @@ class LukeMazeWalker():
 					is_wall = False
 				self.cells[x][y] = Cell(x,y,is_wall)
 
-	def solve(self):
+	def walk(self):
 		self.opened = []
 		self.closed = []
 		self.grid = self.grid_original
@@ -57,10 +57,15 @@ class LukeMazeWalker():
 				self.reconstruct()
 				if not self.wall_removed:
 					self.find_shortcut()
+				return
 
 			self.closed.append(current)
 			del self.opened[-1]
 			neighbors = self.get_neighbors(current)
+
+			if not self.wall_removed:
+				self.find_walls_to_test(current)
+
 			for n in neighbors:
 				if n in self.closed:
 					continue
@@ -81,40 +86,39 @@ class LukeMazeWalker():
 		self.evaluate_dead_end(current)
 
 	def evaluate_dead_end(self, current):
-		if not len(self.total_path):
-			if self.wall_removed:
-				if len(self.test_walls) > 0:
-					self.test_walls.pop()
-					if len(self.test_walls) > 0:
-						cut_x = self.test_walls[-1][0]
-						cut_y = self.test_walls[-1][1]
-						self.cut_wall(cut_x,cut_y)
-			else:
-				if current.x+2 <= self.width and self.grid[current.x+2][current.y] == 0:
-					cut_x = current.x+1
-					cut_y = current.y
-					if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
-				if current.y+2 <= self.height and self.grid[current.x][current.y+2] == 0:
-					cut_x = current.x
-					cut_y = current.y+1
-					if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
-				if current.x-2 <= 0 and self.grid[current.x-2][current.y] == 0:
-					cut_x = current.x-1
-					cut_y = current.y
-					if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
-				if current.y-2 <= 0 and self.grid[current.x][current.y-2] == 0:
-					cut_x = current.x
-					cut_y = current.y-1
-					if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+		if self.wall_removed:
+			if len(self.test_walls):
+				self.test_walls.pop()
 
-				self.cut_wall(cut_x,cut_y)
+		if len(self.test_walls):
+			cut_x = self.test_walls[-1][0]
+			cut_y = self.test_walls[-1][1]
+			self.cut_wall(cut_x,cut_y)
+
+	def find_walls_to_test(self, current):
+		if current.x+2 <= self.width and self.grid[current.x+2][current.y] == 0:
+			cut_x = current.x+1
+			cut_y = current.y
+			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+		if current.y+2 <= self.height and self.grid[current.x][current.y+2] == 0:
+			cut_x = current.x
+			cut_y = current.y+1
+			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+		if current.x-2 <= 0 and self.grid[current.x-2][current.y] == 0:
+			cut_x = current.x-1
+			cut_y = current.y
+			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+		if current.y-2 <= 0 and self.grid[current.x][current.y-2] == 0:
+			cut_x = current.x
+			cut_y = current.y-1
+			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
 	def cut_wall(self,x,y):
 		self.grid[x][y] = 0
 		if (x, y) in self.walls:
 			self.walls.remove( (x, y) )
 		self.wall_removed = True
-		self.solve()
+		self.walk()
 
 	def get_neighbors(self, current):
 		neighbors = []
@@ -225,10 +229,10 @@ test4 = [
 test5 = [
 [0,0,0,0,0,1],
 [1,1,0,1,1,1],
-[0,1,0,1,0,0],
-[1,1,1,1,1,0],
-[1,1,0,1,1,0],
-[1,1,1,0,0,0]]
+[0,1,0,1,0,1],
+[1,1,0,1,1,1],
+[0,0,0,0,1,0],
+[0,0,0,0,1,0]]
 
 #odd shape maze
 test6 = [
@@ -239,4 +243,4 @@ test6 = [
 [0,0,0],
 [1,1,0]]
 
-print(answer(test5))
+print(answer(test3))
