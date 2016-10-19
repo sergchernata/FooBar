@@ -279,6 +279,7 @@ test6 = [
 [0,0],
 [1,0]]
 
+# solves to 13
 test7 = [
 [0,0,0,0,0,0],
 [1,1,1,1,1,1],
@@ -303,4 +304,11 @@ test9 = [
 [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
 [1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0]]
 
-print(answer(test9))
+print('test 1: ',answer(test1)==7)
+print('test 2: ',answer(test2)==11)
+print('test 4: ',answer(test4)==12)
+print('test 6: ',answer(test6)==7)
+print('test 7: ',answer(test7)==13)
+print('test 8: ',answer(test8)==19)
+print('test 9: ',answer(test9)==23)
+print(answer(test8))
