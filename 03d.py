@@ -1,8 +1,10 @@
+import time
+
 def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
 	luke.walk()
-	#luke.print_grid()
+	luke.print_grid()
 	return len(luke.best_solution)
 
 class Cell(object):
@@ -65,7 +67,7 @@ class LukeMazeWalker():
 					self.best_solution = list(self.total_path)
 					self.best_grid = list(self.grid)
 
-				if len(self.test_walls) == 0:
+				if not self.wall_removed or len(self.test_walls) == 0:
 					return
 
 			self.closed.append(current)
@@ -202,8 +204,8 @@ class LukeMazeWalker():
 								shortcut = (a[0], a[1]-1)
 
 		if jump:
-			#self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
-			#self.best_grid = [list(row) for row in self.grid]
+			self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
+			self.best_grid = [list(row) for row in self.grid]
 			if backwards:
 				del self.total_path[start+1:end]
 			else:
@@ -305,6 +307,7 @@ test9 = [
 [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
 [1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0]]
 
+start = time.time()
 print('test 1: ',answer(test1)==7)
 print('test 2: ',answer(test2)==11)
 print('test 4: ',answer(test4)==12)
@@ -313,4 +316,7 @@ print('test 6: ',answer(test6)==7)
 print('test 7: ',answer(test7)==13)
 print('test 8: ',answer(test8)==19)
 print('test 9: ',answer(test9)==23)
-print(answer(test5))
+end = time.time()
+print(end - start)
+
+#print(answer(test5))
