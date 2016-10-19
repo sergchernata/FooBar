@@ -33,9 +33,9 @@ class LukeMazeWalker():
 	def parse_grid(self, grid):
 		self.height = len(grid[0]) - 1
 		self.width = len(grid) - 1
-		self.grid = [list(x) for x in grid]
-		self.grid_original = [list(x) for x in grid]
-		self.cells = [list(x) for x in grid]
+		self.grid = [list(row) for row in grid]
+		self.grid_original = [list(row) for row in grid]
+		self.cells = [list(row) for row in grid]
 
 		for x in range(self.width+1):
 			for y in range(self.height+1):
@@ -100,22 +100,26 @@ class LukeMazeWalker():
 			cut_x = current.x+1
 			cut_y = current.y
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+
 		if current.y+2 <= self.height and self.grid[current.x][current.y+2] == 0:
 			cut_x = current.x
 			cut_y = current.y+1
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+
 		if current.x-2 <= 0 and self.grid[current.x-2][current.y] == 0:
 			cut_x = current.x-1
 			cut_y = current.y
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+
 		if current.y-2 <= 0 and self.grid[current.x][current.y-2] == 0:
 			cut_x = current.x
 			cut_y = current.y-1
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
 	def cut_wall(self,x,y):
-		self.grid = [list(x) for x in self.grid_original]
+		self.grid = [list(row) for row in self.grid_original]
 		self.grid[x][y] = self.shortcut
+
 		if (x, y) in self.walls:
 			self.walls.remove( (x, y) )
 		self.wall_removed = True
@@ -176,7 +180,6 @@ class LukeMazeWalker():
 						start = index_a
 						end = index_b
 
-						#shortcut = (a[0]+1, a[1]) if x_wall_down else (a[0], a[1]+1)
 						if x_wall_down:
 							shortcut = (a[0]+1, a[1])
 						elif y_wall_right:
@@ -198,14 +201,14 @@ class LukeMazeWalker():
 
 		self.total_path.sort()
 
-#evaluates to 7
+# solves to 7
 test1 = [
 [0,1,1,1],
 [0,0,0,1],
 [1,1,0,0],
 [1,1,1,0]]
 
-# evaluates to 11
+# solves to 11
 test2 = [
 [0,0,0,0,0,0],
 [1,1,1,1,1,0],
@@ -256,7 +259,7 @@ test5 = [
 [0,0,0,0,1,0],
 [0,0,0,0,1,0]]
 
-#odd shape maze
+#narrow maze
 #solves to 8
 test6 = [
 [0,0,0],
@@ -275,13 +278,19 @@ test7 = [
 [1,0,0,0,0,0]]
 
 # make sure we can find shortcuts
-# on from the right, not just left
+# from the right, not just left
 test8 = [
 [0,0,0,0,0,0],
-[1,1,1,1,1,0],
+[1,1,1,1,1,1],
 [1,1,1,1,1,0],
 [0,0,0,0,0,0],
 [0,0,1,1,1,1],
 [1,0,0,0,0,0]]
 
-print(answer(test6))
+# long maze
+# solves to 23
+test9 = [
+[0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
+[1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0]]
+
+print(answer(test9))
