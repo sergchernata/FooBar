@@ -115,12 +115,12 @@ class LukeMazeWalker():
 			cut_y = current.y+1
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
-		if current.x-2 <= 0 and self.grid[current.x-2][current.y] == 0:
+		if current.x-2 >= 0 and self.grid[current.x-2][current.y] == 0:
 			cut_x = current.x-1
 			cut_y = current.y
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
 
-		if current.y-2 <= 0 and self.grid[current.x][current.y-2] == 0:
+		if current.y-2 >= 0 and self.grid[current.x][current.y-2] == 0:
 			cut_x = current.x
 			cut_y = current.y-1
 			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
@@ -175,34 +175,35 @@ class LukeMazeWalker():
 
 		for a in self.total_path:
 			for b in self.total_path:
+				if self.grid[a[0]][a[1]] == 0 and self.grid[b[0]][b[1]] == 0:
+					x_wall_down = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
+					y_wall_right = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
+					x_wall_up = a[0]-2 == b[0] and a[1] == b[1] and self.grid[a[0]-1][a[1]] == 1
+					y_wall_left = a[0] == b[0] and a[1]-2 == b[1] and self.grid[a[0]][a[1]-1] == 1
 
-				x_wall_down = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
-				y_wall_right = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
-				x_wall_up = a[0]-2 == b[0] and a[1] == b[1] and self.grid[a[0]-1][a[1]] == 1
-				y_wall_left = a[0] == b[0] and a[1]-2 == b[1] and self.grid[a[0]][a[1]-1] == 1
+					if x_wall_down or y_wall_right or x_wall_up or y_wall_left:
+						index_a = self.total_path.index(a)
+						index_b = self.total_path.index(b)
+						dist = abs(index_a - index_b)
+						if dist > jump:
+							jump = dist
+							start = index_a
+							end = index_b
 
-				if x_wall_down or y_wall_right or x_wall_up or y_wall_left:
-					index_a = self.total_path.index(a)
-					index_b = self.total_path.index(b)
-					dist = abs(index_a - index_b)
-					if dist > jump:
-						jump = dist
-						start = index_a
-						end = index_b
-
-						if x_wall_down:
-							shortcut = (a[0]+1, a[1])
-						elif y_wall_right:
-							shortcut = (a[0], a[1]+1)
-						elif x_wall_up:
-							backwards = True
-							shortcut = (a[0]-1, a[1])
-						elif y_wall_left:
-							backwards = True
-							shortcut = (a[0], a[1]-1)
+							if x_wall_down:
+								shortcut = (a[0]+1, a[1])
+							elif y_wall_right:
+								shortcut = (a[0], a[1]+1)
+							elif x_wall_up:
+								backwards = True
+								shortcut = (a[0]-1, a[1])
+							elif y_wall_left:
+								backwards = True
+								shortcut = (a[0], a[1]-1)
 
 		if jump:
-			self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
+			#self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
+			#self.best_grid = [list(row) for row in self.grid]
 			if backwards:
 				del self.total_path[start+1:end]
 			else:
@@ -269,8 +270,8 @@ test5 = [
 [0,0,0,0,1,0],
 [0,0,0,0,1,0]]
 
-#narrow maze
-#solves to 7
+# narrow maze
+# solves to 7
 test6 = [
 [0,0],
 [1,1],
@@ -307,8 +308,9 @@ test9 = [
 print('test 1: ',answer(test1)==7)
 print('test 2: ',answer(test2)==11)
 print('test 4: ',answer(test4)==12)
+print('test 5: ',answer(test5)==11)
 print('test 6: ',answer(test6)==7)
 print('test 7: ',answer(test7)==13)
 print('test 8: ',answer(test8)==19)
 print('test 9: ',answer(test9)==23)
-print(answer(test8))
+print(answer(test5))
