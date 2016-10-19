@@ -4,7 +4,7 @@ def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
 	luke.walk()
-	luke.print_grid()
+	#luke.print_grid()
 	return len(luke.best_solution)
 
 class Cell(object):
@@ -23,8 +23,10 @@ class LukeMazeWalker():
 		self.opened = []
 		self.closed = []
 		self.cells = []
+		self.cells_original = []
 		self.best_solution = []
 		self.walls = []
+		self.walls_original = []
 		self.test_walls = []
 		self.grid = []
 		self.best_grid = []
@@ -39,16 +41,19 @@ class LukeMazeWalker():
 		self.width = len(grid) - 1
 		self.grid = [list(row) for row in grid]
 		self.grid_original = [list(row) for row in grid]
-		self.cells = [list(row) for row in grid]
+		self.cells_original = [list(row) for row in grid]
 
 		for x in range(self.width+1):
 			for y in range(self.height+1):
 				if grid[x][y] == 1:
-					self.walls.append( (x,y) )
+					self.walls_original.append( (x,y) )
 					is_wall = True
 				else:
 					is_wall = False
-				self.cells[x][y] = Cell(x,y,is_wall)
+				self.cells_original[x][y] = Cell(x,y,is_wall)
+
+		self.walls = list(self.walls_original)
+		self.cells = [list(row) for row in self.cells_original]
 
 	def walk(self):
 		self.opened = []
@@ -60,15 +65,16 @@ class LukeMazeWalker():
 			if current.x == self.width and current.y == self.height:
 				self.reconstruct()
 
-				if not self.wall_removed:
-					self.find_shortcut()
-
-				if len(self.best_solution) <= 0 or len(self.total_path) < len(self.best_solution):
+				if len(self.best_solution) == 0 or len(self.total_path) <= len(self.best_solution):
 					self.best_solution = list(self.total_path)
-					self.best_grid = list(self.grid)
+					self.best_grid = [list(row) for row in self.grid]
 
-				if not self.wall_removed or len(self.test_walls) == 0:
-					return
+				if not self.wall_removed:
+					if len(self.test_walls) == 0:
+						return
+					else:
+						self.evaluate_dead_end(current)
+						break
 
 			self.closed.append(current)
 			del self.opened[-1]
@@ -95,10 +101,13 @@ class LukeMazeWalker():
 					self.opened.append( n )
 
 			self.opened.sort(key=lambda x: x.f, reverse=True)
+			#time.sleep(1)
 
 		self.evaluate_dead_end(current)
 
 	def evaluate_dead_end(self, current):
+		#print(self.test_walls)
+		#print('eval dead end')
 		if self.wall_removed:
 			if len(self.test_walls):
 				self.test_walls.pop()
@@ -109,32 +118,36 @@ class LukeMazeWalker():
 			self.cut_wall(cut_x,cut_y)
 
 	def find_walls_to_test(self, current):
-		if current.x+2 <= self.width and self.grid[current.x+2][current.y] == 0:
+		if current.x+2 <= self.width and self.grid[current.x+1][current.y] == 1 and self.grid[current.x+2][current.y] == 0:
 			cut_x = current.x+1
 			cut_y = current.y
-			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+			if (cut_x,cut_y) not in self.closed and (cut_x,cut_y) not in self.test_walls: self.test_walls.append( (cut_x,cut_y) )
 
-		if current.y+2 <= self.height and self.grid[current.x][current.y+2] == 0:
+		if current.y+2 <= self.height and self.grid[current.x][current.y+1] == 1 and self.grid[current.x][current.y+2] == 0:
 			cut_x = current.x
 			cut_y = current.y+1
-			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+			if (cut_x,cut_y) not in self.closed and (cut_x,cut_y) not in self.test_walls: self.test_walls.append( (cut_x,cut_y) )
 
-		if current.x-2 >= 0 and self.grid[current.x-2][current.y] == 0:
+		if current.x-2 >= 0 and self.grid[current.x-1][current.y] == 1 and self.grid[current.x-2][current.y] == 0:
 			cut_x = current.x-1
 			cut_y = current.y
-			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+			if (cut_x,cut_y) not in self.closed and (cut_x,cut_y) not in self.test_walls: self.test_walls.append( (cut_x,cut_y) )
 
-		if current.y-2 >= 0 and self.grid[current.x][current.y-2] == 0:
+		if current.y-2 >= 0 and self.grid[current.x][current.y-1] == 1 and self.grid[current.x][current.y-2] == 0:
 			cut_x = current.x
 			cut_y = current.y-1
-			if (cut_x,cut_y) not in self.closed: self.test_walls.append( (cut_x,cut_y) )
+			if (cut_x,cut_y) not in self.closed and (cut_x,cut_y) not in self.test_walls: self.test_walls.append( (cut_x,cut_y) )
 
 	def cut_wall(self,x,y):
 		self.grid = [list(row) for row in self.grid_original]
+		self.walls = list(self.walls_original)
+		self.cells = [list(row) for row in self.cells_original]
 		self.grid[x][y] = self.shortcut_marker
 
-		if (x, y) in self.walls:
-			self.walls.remove( (x, y) )
+		if (x,y) in self.walls:
+			self.walls.remove( (x,y) )
+			self.cells[x][y] = Cell(x,y,False)
+
 		self.wall_removed = True
 		self.walk()
 
@@ -155,11 +168,11 @@ class LukeMazeWalker():
 		return neighbors
 
 	def print_grid(self):
+		for cell in self.best_solution:
+			self.best_grid[cell[0]][cell[1]] = 8
+
 		for x in self.best_grid:
 			print(x)
-
-		# for y in self.cells:
-		# 	print(y)
 
 	def reconstruct(self):
 		self.total_path = []
@@ -170,50 +183,6 @@ class LukeMazeWalker():
 			self.total_path.append((cell.x, cell.y))
 
 		self.total_path.append((0,0))
-
-	def find_shortcut(self):
-		jump = 0
-		start = 0
-		end = 0
-		backwards = False
-
-		for a in self.total_path:
-			for b in self.total_path:
-				if self.grid[a[0]][a[1]] == 0 and self.grid[b[0]][b[1]] == 0:
-					x_wall_down = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
-					y_wall_right = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
-					x_wall_up = a[0]-2 == b[0] and a[1] == b[1] and self.grid[a[0]-1][a[1]] == 1
-					y_wall_left = a[0] == b[0] and a[1]-2 == b[1] and self.grid[a[0]][a[1]-1] == 1
-
-					if x_wall_down or y_wall_right or x_wall_up or y_wall_left:
-						index_a = self.total_path.index(a)
-						index_b = self.total_path.index(b)
-						dist = abs(index_a - index_b)
-						if dist > jump:
-							jump = dist
-							start = index_a
-							end = index_b
-
-							if x_wall_down:
-								shortcut = (a[0]+1, a[1])
-							elif y_wall_right:
-								shortcut = (a[0], a[1]+1)
-							elif x_wall_up:
-								backwards = True
-								shortcut = (a[0]-1, a[1])
-							elif y_wall_left:
-								backwards = True
-								shortcut = (a[0], a[1]-1)
-
-		if jump:
-			self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
-			self.best_grid = [list(row) for row in self.grid]
-			if backwards:
-				del self.total_path[start+1:end]
-			else:
-				del self.total_path[end+1:start]
-			self.total_path.append(shortcut)
-
 		self.total_path.sort()
 
 # solves to 7
@@ -239,7 +208,7 @@ test3 = [
 [1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,0],
 [1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,1,1,1],
 [1,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0],
-[1,1,0,1,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1],
+[1,1,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1],
 [0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
 [0,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
@@ -362,9 +331,32 @@ test14 = [
 [0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1],
 [0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0]]
 
+test15 = [
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0]]
+
 start = time.time()
 print('test 1: ',answer(test1)==7)
 print('test 2: ',answer(test2)==11)
+print('test 3: ',answer(test3)==89)
 print('test 4: ',answer(test4)==12)
 print('test 5: ',answer(test5)==11)
 print('test 6: ',answer(test6)==7)
@@ -375,7 +367,8 @@ print('test 10: ',answer(test10)==11)
 print('test 11: ',answer(test11)==3)
 print('test 12: ',answer(test12)==11)
 print('test 14: ',answer(test14)==39)
+print('test 15: ',answer(test15)==39)
 end = time.time()
 print(end - start)
 
-print(answer(test14))
+print(answer(test3))
