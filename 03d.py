@@ -2,8 +2,8 @@ def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
 	luke.walk()
-	luke.print_grid()
-	return len(luke.total_path)
+	#luke.print_grid()
+	return len(luke.best_solution)
 
 class Cell(object):
 	def __init__(self, x, y, is_wall = False):
@@ -21,14 +21,16 @@ class LukeMazeWalker():
 		self.opened = []
 		self.closed = []
 		self.cells = []
+		self.best_solution = []
 		self.walls = []
 		self.test_walls = []
 		self.grid = []
+		self.best_grid = []
 		self.grid_original = []
 		self.height = 0
 		self.width = 0
 		self.wall_removed = False
-		self.shortcut = 8
+		self.shortcut_marker = 8
 
 	def parse_grid(self, grid):
 		self.height = len(grid[0]) - 1
@@ -55,9 +57,16 @@ class LukeMazeWalker():
 			current = self.opened[-1]
 			if current.x == self.width and current.y == self.height:
 				self.reconstruct()
+
 				if not self.wall_removed:
 					self.find_shortcut()
-				return
+
+				if len(self.best_solution) <= 0 or len(self.total_path) < len(self.best_solution):
+					self.best_solution = list(self.total_path)
+					self.best_grid = list(self.grid)
+
+				if len(self.test_walls) == 0:
+					return
 
 			self.closed.append(current)
 			del self.opened[-1]
@@ -118,7 +127,7 @@ class LukeMazeWalker():
 
 	def cut_wall(self,x,y):
 		self.grid = [list(row) for row in self.grid_original]
-		self.grid[x][y] = self.shortcut
+		self.grid[x][y] = self.shortcut_marker
 
 		if (x, y) in self.walls:
 			self.walls.remove( (x, y) )
@@ -142,13 +151,14 @@ class LukeMazeWalker():
 		return reversed(neighbors)
 
 	def print_grid(self):
-		for x in self.grid:
+		for x in self.best_grid:
 			print(x)
 
 		# for y in self.cells:
 		# 	print(y)
 
 	def reconstruct(self):
+		self.total_path = []
 		cell = self.cells[self.width][self.height]
 		self.total_path = [(cell.x, cell.y)]
 		while not (cell.came_from.x == 0 and cell.came_from.y == 0):
@@ -192,7 +202,7 @@ class LukeMazeWalker():
 							shortcut = (a[0], a[1]-1)
 
 		if jump:
-			self.grid[shortcut[0]][shortcut[1]] = self.shortcut
+			self.grid[shortcut[0]][shortcut[1]] = self.shortcut_marker
 			if backwards:
 				del self.total_path[start+1:end]
 			else:
@@ -293,4 +303,4 @@ test9 = [
 [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
 [1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0]]
 
-print(answer(test4))
+print(answer(test9))
