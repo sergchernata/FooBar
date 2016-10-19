@@ -4,7 +4,7 @@ def answer(maze):
 	luke = LukeMazeWalker()
 	luke.parse_grid(maze)
 	luke.walk()
-	luke.print_grid()
+	#luke.print_grid()
 	return len(luke.best_solution)
 
 class Cell(object):
@@ -84,15 +84,17 @@ class LukeMazeWalker():
 				if n in self.opened:
 					if n.g > current.g + 10:
 						n.g = current.g + 10
-						n.h = 10 * (abs(current.x - self.width) + abs(current.y - self.height))
+						n.h = 10 * (abs(current.x - self.height) + abs(current.y - self.width))
 						n.came_from = current
 						n.f = n.h + n.g
 				else:
 					n.g = current.g + 10
-					n.h = 10 * (abs(current.x - self.width) + abs(current.y - self.height))
+					n.h = 10 * (abs(current.x - self.height) + abs(current.y - self.width))
 					n.came_from = current
 					n.f = n.h + n.g
 					self.opened.append( n )
+
+			self.opened.sort(key=lambda x: x.f, reverse=True)
 
 		self.evaluate_dead_end(current)
 
@@ -150,7 +152,7 @@ class LukeMazeWalker():
 		if x > 0 and (x-1, y) not in self.walls:
 			neighbors.append( self.cells[x-1][y] )
 
-		return reversed(neighbors)
+		return neighbors
 
 	def print_grid(self):
 		for x in self.best_grid:
@@ -307,6 +309,14 @@ test9 = [
 [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0],
 [1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,0,0,0,1,0]]
 
+test10 = [
+[0,0,0,0,0,0],
+[0,1,1,1,1,0],
+[0,1,0,0,1,0],
+[0,1,0,0,1,0],
+[0,1,1,1,1,0],
+[0,0,0,0,0,0]]
+
 start = time.time()
 print('test 1: ',answer(test1)==7)
 print('test 2: ',answer(test2)==11)
@@ -316,7 +326,8 @@ print('test 6: ',answer(test6)==7)
 print('test 7: ',answer(test7)==13)
 print('test 8: ',answer(test8)==19)
 print('test 9: ',answer(test9)==23)
+print('test 10: ',answer(test10)==11)
 end = time.time()
 print(end - start)
 
-#print(answer(test5))
+print(answer(test10))
