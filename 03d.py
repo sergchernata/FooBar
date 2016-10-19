@@ -157,12 +157,17 @@ class LukeMazeWalker():
 		jump = 0
 		start = 0
 		end = 0
+		backwards = False
 
 		for a in self.total_path:
 			for b in self.total_path:
-				x_wall = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
-				y_wall = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
-				if x_wall or y_wall:
+
+				x_wall_down = a[0]+2 == b[0] and a[1] == b[1] and self.grid[a[0]+1][a[1]] == 1
+				y_wall_right = a[0] == b[0] and a[1]+2 == b[1] and self.grid[a[0]][a[1]+1] == 1
+				x_wall_up = a[0]-2 == b[0] and a[1] == b[1] and self.grid[a[0]-1][a[1]] == 1
+				y_wall_left = a[0] == b[0] and a[1]-2 == b[1] and self.grid[a[0]][a[1]-1] == 1
+
+				if x_wall_down or y_wall_right or x_wall_up or y_wall_left:
 					index_a = self.total_path.index(a)
 					index_b = self.total_path.index(b)
 					dist = abs(index_a - index_b)
@@ -170,11 +175,25 @@ class LukeMazeWalker():
 						jump = dist
 						start = index_a
 						end = index_b
-						shortcut = (a[0]+1, a[1]) if x_wall else (a[0], a[1]+1)
-		print(jump)
+
+						#shortcut = (a[0]+1, a[1]) if x_wall_down else (a[0], a[1]+1)
+						if x_wall_down:
+							shortcut = (a[0]+1, a[1])
+						elif y_wall_right:
+							shortcut = (a[0], a[1]+1)
+						elif x_wall_up:
+							backwards = True
+							shortcut = (a[0]-1, a[1])
+						elif y_wall_left:
+							backwards = True
+							shortcut = (a[0], a[1]-1)
+
 		if jump:
 			self.grid[shortcut[0]][shortcut[1]] = self.shortcut
-			del self.total_path[end+1:start]
+			if backwards:
+				del self.total_path[start+1:end]
+			else:
+				del self.total_path[end+1:start]
 			self.total_path.append(shortcut)
 
 		self.total_path.sort()
@@ -223,7 +242,7 @@ test4 = [
 [0,0,0,0,0,1],
 [1,1,0,0,0,1],
 [0,0,0,1,1,1],
-[0,1,0,0,0,0],
+[0,1,0,1,0,0],
 [0,1,1,1,1,0],
 [1,1,0,0,0,0]]
 
@@ -255,4 +274,14 @@ test7 = [
 [0,0,1,1,1,0],
 [1,0,0,0,0,0]]
 
-print(answer(test1))
+# make sure we can find shortcuts
+# on from the right, not just left
+test8 = [
+[0,0,0,0,0,0],
+[1,1,1,1,1,0],
+[1,1,1,1,1,0],
+[0,0,0,0,0,0],
+[0,0,1,1,1,1],
+[1,0,0,0,0,0]]
+
+print(answer(test6))
