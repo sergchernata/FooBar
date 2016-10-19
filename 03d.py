@@ -144,13 +144,13 @@ class LukeMazeWalker():
 		y = current.y
 
 		if y < self.height and (x, y+1) not in self.walls:
-			neighbors.append( self.cells[x][y+1] )
+			neighbors.insert( 0, self.cells[x][y+1] )
 		if y > 0 and (x, y-1) not in self.walls:
-			neighbors.append( self.cells[x][y-1] )
+			neighbors.insert( 0, self.cells[x][y-1] )
 		if x < self.width and (x+1, y) not in self.walls:
-			neighbors.append( self.cells[x+1][y] )
+			neighbors.insert( 0, self.cells[x+1][y] )
 		if x > 0 and (x-1, y) not in self.walls:
-			neighbors.append( self.cells[x-1][y] )
+			neighbors.insert( 0, self.cells[x-1][y] )
 
 		return neighbors
 
@@ -331,19 +331,51 @@ test12 = [
 [1,1,0,0,0,0],
 [1,0,0,0,0,0]]
 
-# start = time.time()
-# print('test 1: ',answer(test1)==7)
-# print('test 2: ',answer(test2)==11)
-# print('test 4: ',answer(test4)==12)
-# print('test 5: ',answer(test5)==11)
-# print('test 6: ',answer(test6)==7)
-# print('test 7: ',answer(test7)==13)
-# print('test 8: ',answer(test8)==19)
-# print('test 9: ',answer(test9)==23)
-# print('test 10: ',answer(test10)==11)
-# print('test 11: ',answer(test11)==3)
-# print('test 12: ',answer(test12)==11)
-# end = time.time()
-# print(end - start)
+test13 = [
+[0,1,1,1,1,1],
+[0,1,0,0,0,0],
+[0,1,0,1,1,0],
+[0,0,0,1,1,0],
+[1,1,1,1,0,0],
+[1,1,1,1,0,1],
+[0,0,1,0,0,0]]
 
-print(answer(test12))
+test14 = [
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0],
+[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1],
+[0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1],
+[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0]]
+
+start = time.time()
+print('test 1: ',answer(test1)==7)
+print('test 2: ',answer(test2)==11)
+print('test 4: ',answer(test4)==12)
+print('test 5: ',answer(test5)==11)
+print('test 6: ',answer(test6)==7)
+print('test 7: ',answer(test7)==13)
+print('test 8: ',answer(test8)==19)
+print('test 9: ',answer(test9)==23)
+print('test 10: ',answer(test10)==11)
+print('test 11: ',answer(test11)==3)
+print('test 12: ',answer(test12)==11)
+print('test 14: ',answer(test14)==39)
+end = time.time()
+print(end - start)
+
+print(answer(test14))
